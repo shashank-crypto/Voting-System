@@ -1,0 +1,40 @@
+// import { useState, useEffect } from 'react';
+// // import {  } from 'react/cjs/react.production.min';
+// import {getElectionInfo, getDeployedElections} from '../controllers/contractConnect';
+
+// const [electionInfo, setElelctionInfo] = useState([]);
+
+// function Elections() {
+
+//     useEffect(() => {
+//         async function setData() {
+//             const elections = await getDeployedElections();
+//             let election = [];
+//             // console.log('electionInfo', elections)
+//             await elections.map(async element => {
+//                 const info = await getElectionInfo(element);
+//                 // setElelctionInfo([...electionInfo, info])
+//                 election.push(info);
+//                 console.log("Info", info);
+//             });
+//             setElelctionInfo(election);
+//             console.log("electionInfo", electionInfo)
+//         }
+//         setData();
+//     },[])
+
+//     async function getTables () {
+//         const elections = await getDeployedElections();
+//         elections.map(async element => {
+
+//         })
+//     }
+
+//     return(
+//         <div onLoad={getTables}>
+//             {console.log("electionInfooo", electionInfo)}
+//         </div>
+//     )
+// }
+
+// export default Elections;

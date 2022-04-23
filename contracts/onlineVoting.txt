@@ -1,0 +1,51 @@
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.6.0 <0.9.0;
+
+contract votingSystem {
+
+    address management;
+    int8 candidateNumber;
+    mapping (address => bool) registeredList;
+    mapping (int8 => uint) voteCount;
+    mapping (address => bool) voters;
+    mapping (int8 => Candidate) candidates;
+    
+     //false once voted or if changed the address
+    uint totalVote;
+
+    struct Candidate {
+        string name;
+        string party;
+        int8 age;
+        address candidateAddress;
+    }
+
+    modifier onlyManagement {
+        require(management == msg.sender, "Only administrators have the access to this action");
+        _;
+    }
+
+    constructor() {
+        management = msg.sender
+    }
+
+    function vote(int8 index) public {
+        require(voters[msg.sender], "Your address is not validated");
+        voteCount[index]++;
+        voters[msg.sender] = false;
+    }
+
+    function addCandidate(string _name, string _party, int8 _age, address _address) public onlyManagement{
+        Candidate storage newCandidate = candidates[candidateNumber++];
+        newCandidate.name = _name
+        newCandidate.party = _party;
+        newCandidate.age = _age;
+        newCandidate.candidateAddress = _address;
+    }
+
+    function approveRegister(address votersAddress) public onlyManagement{
+        registeredList
+        voters[votersAddress] = true;
+    }
+
+}
