@@ -1,34 +1,96 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-## Getting Started
+# Voting System
 
-First, run the development server:
+Voting is the most important festival for any country with Democracy. It is vital to have a fair and transparent elections without any interference from outside force to protect the future and integrity of the country.
+
+So, here is a system that utilizes the strength of blockchain to conduct transparent, fair and anonymous elections while saving a lot of money spent on conducting the elections. I have tried to create a small demo on how things can work.
+
+## Installation
+
+Installation and running the project is a bit tedious but fun. Once it starts running it can be a really good place for someone to start learning about smart-contracts, connecting them with Frontend. In this, I have used **Ganache**, **Truffle** to work with smart contracts.
 
 ```bash
-npm run dev
-# or
-yarn dev
+  git clone https://github.com/shashank-crypto/Voting-System
+  cd Voting-System
+```
+Installing npm packages 
+
+```bash
+  npm install
+```
+#### To run contracts
+
+```
+npm i -g truffle
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```
+cd contracts
+```
+To compile your contracts and create abis
+```
+truffle compile
+```
+To migrate the contracts and run them on your ganache server 
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+*need to have correct configs in **truffle-config.js***
+```
+truffle migrate
+```
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+Copy the contract address *(result of migration)*, open `controllers/contractConnect.js` and change `0x6c2559Cad2D3ca535427D036CDBaAE5B3B965195` with copied address.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+#### To start frontend
 
-## Learn More
+```
+cd ..
+```
 
-To learn more about Next.js, take a look at the following resources:
+```
+npm run build
+```
+Go to http://localhost:3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Need to have Metamask chrome extension installed and setup done. Import few accounts from **Ganache**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+#### Happy Exploring
+## Features
 
-## Deploy on Vercel
+- Creating elections
+- Election creator are automatically assumed with Admin access
+- Register in an election as Voter or Candidate
+- Needs approval from Admin to participate
+- Can check your status or general registered info
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+## Running Tests
+
+To run tests, run the following command
+
+```bash
+  npm install cypress
+  cypress open
+```
+
+
+## Tech Stack
+
+**Client:** NextJS, Bulma, CSS
+
+**Server:** Ganache, Truffle, Web3, Solidity
+
+
+## Authors
+
+- [@shashank-crypto](https://www.github.com/shashank-crypto)
+
+
+## Feedback
+
+If you have any feedback, please reach out to me at shashank.k.chaudhary@gmail.com
+
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
