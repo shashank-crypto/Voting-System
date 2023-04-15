@@ -9,7 +9,8 @@ function CreateElection() {
             const level = e.target.level.value;
             const type = e.target.type.value;
 
-            await createElection(name, level, type)
+            const data = await createElection(name, level, type)
+            console.log("data", JSON.stringify(data))
 
         }
         catch(err) {
