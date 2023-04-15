@@ -6,7 +6,7 @@ import election from "../contracts/build/contracts/votingSystem.json";
 const connectFactory = () => {
     return new web3.eth.Contract(
         JSON.parse(JSON.stringify(factory.abi)),
-        "0x6c2559Cad2D3ca535427D036CDBaAE5B3B965195"
+        "0xC2989D12C40062697B11082250f610c707e8b3e4"
     );
 };
 
@@ -33,9 +33,10 @@ const createElection = async (name, level, electionType) => {
             return;
         }
         const address = await web3.eth.getAccounts();
-        await connectFactory()
+        const createdElection = await connectFactory()
             .methods.createElection(name, level, electionType)
             .send({ from: address[0] });
+        return {createdElection, 'address' : address[0]};
     } catch (err) {
         console.log("An error caught in createElection", err);
     }
@@ -47,10 +48,31 @@ const getDeployedElections = async () => {
         const elections = await connectFactory()
             .methods.getDeployedElections()
             .call({ from: address[0] });
-        console.log(elections);
         return elections;
     } catch (err) {
         console.log("An error occured in getDeployedElections", err);
+    }
+};
+
+const startElection = async (contractAddress) => {
+    try {
+        const address = await web3.eth.getAccounts();
+        await connectElection(contractAddress)
+            .methods.startElection()
+            .send({ from: address[0] });
+    } catch (err) {
+        console.log("An error occured in startElection", err);
+    }
+};
+
+const endElection = async (contractAddress) => {
+    try {
+        const address = await web3.eth.getAccounts();
+        await connectElection(contractAddress)
+            .methods.endElection()
+            .send({ from: address[0] });
+    } catch (err) {
+        console.log("An error occured in endElection", err);
     }
 };
 
@@ -60,7 +82,7 @@ const getElectionInfo = async (contractAddress) => {
         const info = await connectElection(contractAddress)
             .methods.getElectionInfo()
             .call({ from: address[0] });
-        info[3] = contractAddress;
+        info[4] = contractAddress;
         return info;
     } catch (err) {
         console.log("Error caught in electionInfo", err);
@@ -248,4 +270,6 @@ export {
     getCandidates,
     getCandidateInfo,
     getWalletAddress,
+    startElection,
+    endElection,
 };
