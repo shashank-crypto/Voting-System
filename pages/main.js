@@ -18,6 +18,29 @@ export default function MainPage() {
     ]);
     const [walletAddress, setWalletAddress] = useState("");
 
+    const levelMap = {
+        0: "Local",
+        1: "State",
+        2: "Country"
+    }
+
+    const electionTypeMap = {
+        0: "General",
+        1: "By-Election"
+    }
+
+    const electionStatusMap = {
+        0: "Not Started",
+        1: "Started",
+        2: "Ended"
+    }
+
+    const tagColorMap = {
+        0: "is-warning",
+        1: "is-success",
+        2: "is-danger"
+    }
+    
     // check if ethereum wallet is connected
     const walletMatch = () => {
         if (walletAddress === userData?.walletId) {
@@ -54,16 +77,7 @@ export default function MainPage() {
     return (
         <div>
             {walletMatch() ? null : (
-                // <article class="message is-danger is-widescreen">
-                //     <div class="message-header">
-                //         <p>Wallet mismatch</p>
-                //         <button class="delete" aria-label="delete"></button>
-                //     </div>
-                //     <div class="message-body">
-                //         Either you are not connected to a wallet or the address you are connected with and one you are registered with are different. You won't be able to perform any action on the elections. Please connect to the wallet you are registered with.
-                //     </div>
-                // </article>
-                <div class="notification is-danger is-light container is-widescreen">
+                <div className="notification is-danger is-light container is-widescreen">
                     <p className="title is-6">Wallet Mismatch</p>
                     <p>
                         Either you are not connected to a wallet or the address
@@ -74,24 +88,24 @@ export default function MainPage() {
                     </p>
                 </div>
             )}
-            <div class="container is-fluid">
-                <div class="notification is-primary">
+            <div className="container is-fluid">
+                <div className="notification is-primary">
                     {userData ? (
                         <div>
                             <h1 className="title">Hi {userData.name}</h1>
-                            <div class="level">
-                                <div class="level-left">
+                            <div className="level">
+                                <div className="level-left">
                                     <div>
-                                        <p class="heading">Email</p>
-                                        <p class="subheading">
+                                        <p className="heading">Email</p>
+                                        <p className="subheading">
                                             {userData.email}
                                         </p>
                                     </div>
                                 </div>
-                                <div class="level-right">
+                                <div className="level-right">
                                     <div>
-                                        <p class="heading">Wallet Address</p>
-                                        <p class="subheading">
+                                        <p className="heading">Wallet Address</p>
+                                        <p className="subheading">
                                             {userData.walletId}
                                         </p>
                                     </div>
@@ -101,26 +115,21 @@ export default function MainPage() {
                     ) : null}
                 </div>
             </div>
-            <div class="columns is-mobile">
-                <div class="column">1</div>
-                <div class="column">2</div>
-                <div class="column">3</div>
-                <div class="column">4</div>
-            </div>
-            <div className="columns is-mobile container is-large">
+            <div>
             {electionInfo.map((element, index) => {
                 return (
                     <div key={index} className="block card column">
                         <header className="card-header">
-                            <p className="card-header-title">{element[0]}</p>
+                            <p className="card-header-title" style={{background : "#B9EDDD"}}>{element[0]}</p>
                         </header>
                         <div className="card-content">
-                            Level : {element[1]} <br />
-                            Type of Election : {element[2]}
+                            Level : {levelMap[element[1]]} <br />
+                            Type of Election : {electionTypeMap[element[2]]} <br />
+                            ElectionStatus : <span className={`tag ${tagColorMap[element[3]]} is-light`}> {electionStatusMap[element[3]]} </span> <br />
                         </div>
                         <footer className="card-footer">
                             <a
-                                href={`elections/${element[3]}`}
+                                href={`elections/v2/${element[4]}-${index}`}
                                 className="card-footer-item"
                             >
                                 Participate
