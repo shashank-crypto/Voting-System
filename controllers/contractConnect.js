@@ -6,7 +6,7 @@ import election from "../contracts/build/contracts/votingSystem.json";
 const connectFactory = () => {
     return new web3.eth.Contract(
         JSON.parse(JSON.stringify(factory.abi)),
-        "0xC2989D12C40062697B11082250f610c707e8b3e4"
+        "0x7a937b1982b92796aab42534f3ba159Ee70c280B"
     );
 };
 
@@ -101,7 +101,7 @@ const registerVoter = async (
         const data = await connectElection(contractAddress)
             .methods.registerVoter(name, age, aadharNumber, phone)
             .send({ from: address[0] });
-        console.log(data);
+        return address[0];
     } catch (err) {
         console.log("An error occured while registering voter", err);
     }
@@ -114,12 +114,14 @@ const registerCandidate = async (
     aadharNumber,
     contractAddress
 ) => {
+    const address = await web3.eth.getAccounts();
+    console.log("Address", address);
     try {
-        const address = await web3.eth.getAccounts();
         const txn = await connectElection(contractAddress)
             .methods.registerCandidate(name, party, age, aadharNumber)
             .send({ from: address[0], value: web3.utils.toWei("1", "ether") });
         console.log("Transaction", txn);
+        return address[0];
     } catch (err) {
         console.log("An error occured in registerCandidate", err);
     }
