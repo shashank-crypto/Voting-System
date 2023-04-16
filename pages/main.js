@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { onAuthStateChanged } from "firebase/auth";
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDoc, doc } from "firebase/firestore";
 import { auth, db } from "../controllers/firebaseConfig";
 import {
@@ -7,8 +7,12 @@ import {
     getElectionInfo,
 } from "../controllers/contractConnect";
 import { getWalletAddress } from "../controllers/contractConnect";
+import { useRouter } from "next/router";
 
 export default function MainPage() {
+
+    const { push } = useRouter();
+
     const [user, setUser] = useState(null);
     const [userData, setUserData] = useState(null);
     const [electionInfo, setElectionInfo] = useState([
@@ -49,14 +53,20 @@ export default function MainPage() {
         return false;
     };
 
+    const logout = async () => {
+        await signOut(auth);
+        setUser(null);
+    }
+
     useEffect(() => {
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                console.log(user);
                 setUser(user);
                 const docData = await getDoc(doc(db, "User", user.uid));
                 setUserData(docData.data());
             } else {
-                setUser(null);
+                push("/auth");
             }
         });
         async function getData() {
@@ -92,7 +102,10 @@ export default function MainPage() {
                 <div className="notification is-primary">
                     {userData ? (
                         <div>
-                            <h1 className="title">Hi {userData.name}</h1>
+                            <div className="box" style={{display:"flex", justifyContent:"space-between"}}>
+                                <h1 className="title">Hi, {userData.name}</h1>
+                                <button className="button is-danger is-light" onClick={logout}>Logout</button>
+                            </div>
                             <div className="level">
                                 <div className="level-left">
                                     <div>
@@ -129,7 +142,7 @@ export default function MainPage() {
                         </div>
                         <footer className="card-footer">
                             <a
-                                href={`elections/v2/${element[4]}-${index}`}
+                                href={`elections/v2/${element[4]}-${index + 1}`}
                                 className="card-footer-item"
                             >
                                 Participate

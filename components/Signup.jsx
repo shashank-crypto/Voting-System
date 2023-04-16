@@ -3,46 +3,55 @@ import { auth, db } from "../controllers/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc } from "firebase/firestore";
 import { getWalletAddress } from "../controllers/contractConnect";
+import { useRouter } from "next/router";
 
 const Signup = ({ email }) => {
+
+    const { push } = useRouter();
+
     const [walletId, setWalletId] = useState("");
+    const [modal, setModal] = useState(false);
 
     const createUser = async (e) => {
-        e.preventDefault();
-        const email = e.target.elements.email.value;
-        const password = e.target.elements.password.value;
-        const name = e.target.elements.name.value;
-        const age = e.target.elements.age.value;
-        const aadhar = e.target.elements.aadhar.value;
-        const phone = e.target.elements.phone.value;
-        const userCreds = await createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-        );
-        const roleType = e.target.elements.role.value;
-        console.log(
-            "email: ",
-            email,
-            "password: ",
-            password,
-            "walletID: ",
-            walletId,
-            "role: ",
-            roleType,
-            "userCreds: ",
-            userCreds
-        );
-        if (walletId === "") await setWalletAddress();
-        await setDoc(doc(db, "User", userCreds.user.uid), {
-            email: email,
-            name : name,
-            age : age,
-            aadhar : aadhar,
-            phone : phone,
-            walletId: walletId,
-            role: roleType, // admin, voter, candidate
-        });
+        try{
+            e.preventDefault();
+            const email = e.target.elements.email.value;
+            const password = e.target.elements.password.value;
+            const name = e.target.elements.name.value;
+            const age = e.target.elements.age.value;
+            const aadhar = e.target.elements.aadhar.value;
+            const phone = e.target.elements.phone.value;
+            const userCreds = await createUserWithEmailAndPassword(
+                auth,
+                email,
+                password
+            );
+            console.log(
+                "email: ",
+                email,
+                "password: ",
+                password,
+                "walletID: ",
+                walletId,
+                "userCreds: ",
+                userCreds
+            );
+            if (walletId === "") await setWalletAddress();
+            await setDoc(doc(db, "User", userCreds.user.uid), {
+                email: email,
+                name : name,
+                age : age,
+                aadhar : aadhar,
+                phone : phone,
+                walletId: walletId
+            });
+            push("/main");
+        }
+        catch(error){
+            console.log(error);
+            setModal(true);
+            console.log(error.code);
+        }
     };
 
     const setWalletAddress = async () => {
@@ -58,6 +67,26 @@ const Signup = ({ email }) => {
 
     return (
         <div className="box container is-max-widescreen">
+            {modal ? (
+                <div className="modal is-active">
+                    <div className="modal-background"></div>
+                    <div className="modal-card">
+                        {/* <section className="modal-card-body">Hey</section>
+                        <footer className="modal-card-foot">
+                            <button className="button is-danger">Okay</button>
+                        </footer> */}
+                        <div className="notification is-danger is-light">
+                            Something went wrong. Please try again.
+                        </div>
+                        <button
+                            className="button is-danger"
+                            onClick={() => setModal(false)}
+                        >
+                            Okay
+                        </button>
+                    </div>
+                </div>
+            ) : null}
             <p className="title">Signup</p>
             <form onSubmit={createUser}>
                 <div className="field">
@@ -160,20 +189,6 @@ const Signup = ({ email }) => {
                             refresh the page.
                         </p>
                     ) : null}
-                </div>
-
-                <div className="field">
-                    <label className="label">Role</label>
-                    <div className="control">
-                        <label className="radio">
-                            <input type="radio" name="role" value="voter" />
-                            Voter
-                        </label>
-                        <label className="radio">
-                            <input type="radio" name="role" value="cadidate" />
-                            Candidate
-                        </label>
-                    </div>
                 </div>
 
                 <div className="field">

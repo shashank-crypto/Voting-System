@@ -1,15 +1,24 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { auth } from "../controllers/firebaseConfig";
-import { fetchSignInMethodsForEmail } from "firebase/auth";
+import { fetchSignInMethodsForEmail, onAuthStateChanged } from "firebase/auth";
 import Signup from "../components/Signup";
 import Login from "../components/Login";
 
 export default function Auth() {
+
+    const { push } = useRouter();
+
     const [authType, setAuthType] = useState("");
     const [userEmail, setUserEmail] = useState("");
 
     useEffect(() => {
         console.log("Auth Page");
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                push("/main");
+            }
+        });
     }, [authType]);
 
     const checkEmail = (e) => {
@@ -32,7 +41,7 @@ export default function Auth() {
     };
 
     return (
-        <div>
+        <div style={{minHeight : "100vh", display: "flex", alignItems: "center"}}>
             {(() => {
                 if (authType == "signup") {
                     return <Signup email={userEmail} />;
@@ -40,7 +49,7 @@ export default function Auth() {
                     return <Login email={userEmail} />;
                 } else {
                     return (
-                        <div className="box container is-max-widescreen">
+                        <div className="box container is-max-widescreen" style={{ maxWidth : "40rem"}}>
                             <p className="title">Authentication</p>
                             <form onSubmit={checkEmail}>
                                 <div className="field">

@@ -3,11 +3,14 @@ import { db, auth } from '../../../controllers/firebaseConfig'
 import { setDoc, getDoc, doc } from "firebase/firestore";
 import { onAuthStateChanged } from 'firebase/auth';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 function CreateElection() {
 
+    const { push } = useRouter();
+
     const [user, setUser] = useState(null);
-    const [success, setSuccess] = useState(false);
+    const [modal, setModal] = useState(false);
 
     async function createElectionSubmit(e) {
         try {
@@ -19,8 +22,7 @@ function CreateElection() {
             const adminAddress = await createElection(name, level, type)
             const deployedElections = await getDeployedElections();
             if (adminAddress) {
-                setSuccess(true);
-                console.log("adminAddress", deployedElections)
+                console.log("adminAddress", adminAddress)
                 await setDoc(doc(db, "Elections", (random + deployedElections.length)), {
                     name: name,
                     level: level,
@@ -28,7 +30,7 @@ function CreateElection() {
                     status: 0,
                     admin: adminAddress['address'],
                 });
-                console.log(success);
+                setModal(true);
             }
         }
         catch (err) {
@@ -37,38 +39,24 @@ function CreateElection() {
         // return false;
     }
 
+
     useEffect(() => {
-        // onAuthStateChanged(auth, (user) => {
-        //     if (user) {
-        //         setUser(user);
-        //         console.log("user", user)
-        //     } else {
-        //         // User is signed out
-        //         // ...
-        //         console.log("user", user)
-        //     }
-        // });
-        setTimeout(() => {
-            setSuccess(false);
-        }, 10000);
-    }, [success])
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                setUser(user);
+            } else {
+                push('/auth');
+            }
+        });
+    }, []);
 
     return (
         <div className='block'>
-            {success ? <div className="modal">
+            {modal ? <div className="modal is-active">
                 <div className="modal-background"></div>
                 <div className="modal-card">
-                    <header className="modal-card-head">
-                        <p className="modal-card-title">Modal title</p>
-                        <button className="delete" aria-label="close"></button>
-                    </header>
-                    <section className="modal-card-body">
-                        -- Content ... --
-                    </section>
-                    <footer className="modal-card-foot">
-                        <button className="button is-success">Save changes</button>
-                        <button className="button">Cancel</button>
-                    </footer>
+                    <p className="subtitle notification is-primary is-light">Election created successfully.</p>
+                    <button className="button is-primary" onClick={() => setModal(false)}>Thank You</button>
                 </div>
             </div> :  null}
             <h1 className='title'>Create Election</h1>
