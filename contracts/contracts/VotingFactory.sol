@@ -10,10 +10,12 @@ contract VotingFactory{
     constructor(){
         adminstrator = payable(msg.sender);
     }
-    function createElection(string memory _name, uint8 _level, uint8 _electionType) public {
-        require(msg.sender == adminstrator, "Only admin can create an election");
-        votingSystem newElection = new votingSystem(_name,_level,_electionType,adminstrator);
+    function createElection(string memory _name, uint8 _level, uint8 _electionType) public returns (address) {
+        // removing the adminstrator check for now > anyone can create an election
+        // require(msg.sender == adminstrator, "Only admin can create an election");
+        votingSystem newElection = new votingSystem(_name,_level,_electionType,payable(msg.sender));
         deployedElections.push(newElection);
+        return address(newElection);
     }
 
     function getDeployedElections() public view returns (votingSystem[] memory){

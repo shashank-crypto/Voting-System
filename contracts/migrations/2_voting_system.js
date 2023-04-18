@@ -1,6 +1,6 @@
-const votingFactory = artifacts.require("votingFactory");
+const VotingFactory = artifacts.require("VotingFactory");
 
 module.exports = function (deployer) {
-  deployer.deploy(votingFactory);
+  deployer.deploy(VotingFactory);
 };
 
