@@ -11,13 +11,13 @@ const Home = () => {
       <div className={styles.navbar}>
         <a href="#about">About</a>
         <a href="#footer">Contact</a>
-        <Link href="/elections/create"><span id="createElectionButton"className={styles.button} style={{cursor:"pointer"}}>create election</span></Link>
+        <Link href="/elections/v2/create"><span id="createElectionButton"className={styles.button} style={{cursor:"pointer"}}>create election</span></Link>
       </div>
       <div style={{flexGrow:"1"}}>
         <div style={{marginTop:"20vh"}}>
       <h3 style={{fontSize:"48px"}}>Be a part of decision</h3>
         <h1 style={{fontSize:"99px",color:"#015FC7"}}>Vote Today</h1>
-        <Link href="/elections" ><a id="checkElections" className={styles.button}>ELECTIONS</a></Link>
+        <Link href="/main" ><a id="checkElections" className={styles.button}>ELECTIONS</a></Link>
         <a href="#features" className={styles.button}>READ MORE</a>
         </div>
       </div>
